@@ -42,10 +42,10 @@ void loop(){
     Serial.println(v4);
     v4 = v4 *(5.0/1024); 
     v5 = analogRead(apin5);
-    Serial.print("raw data on pin a5: ");
-    Serial.println(v5);
+    //Serial.print("raw data on pin a5: ");
+    //Serial.println(v5);
     v5 = v5 * (5.0/1024);
-    float gnd = 0.0;                        //use a5 for grnd for now
+    //float gnd = 0.0;
     //calculate current from output voltage
     //first is panel-to-battery up to ~30A ::
     current0 = (v0 - 0.5) / 0.133;        //0.133V/A
@@ -61,7 +61,7 @@ void loop(){
     Serial.print("battery_mains_current_A: ");
     Serial.println(current1);
     Serial.print("battery_mains_voltage_V: ");
-    Serial.println(Vratio*(v4-gnd));              //across R
+    Serial.println(Vratio*(v4));              //across R to grnd
     //Serial.print("battery_metering_current_A: ");
     //Serial.println(current2);
     //Serial.print("battery_metering_voltage_V: ");
