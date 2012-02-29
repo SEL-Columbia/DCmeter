@@ -31,9 +31,16 @@ fig.savefig('plots/measurements.pdf')
 
 fig2=plt.figure()
 ax2 = fig2.add_axes((.1,.3,.8,.6))
+#least squares regression line:
+A = np.vstack([PS_a, np.ones(len(PS_a))]).T
+m,c = np.linalg.lstsq(A, curr_a)[0]
+ax2.plot(PS_a, [m*PS_a[x]+c for x in range(len(PS_a))],color='lightgrey', ls='--')
+print 'slope is ',m #slope
 for i in range(len(PS_v)):
     #ax.plot(PS_v[i], volt_v[i], 'x-', label='voltage from resistor divider')
     ax2.plot(PS_a[i], curr_a[i], 'x-', label='current')
+    #ax2.plot(curr_a[i], curr_a[i],color='lightgrey')
+
 #ax2.legend(loc=0)
 ax2.grid(True)
 ax2.set_xlabel("power supply")
