@@ -1,28 +1,8 @@
-/* 
-With Analog Device AD8215 measuring across high-side cable, between:
-a) panels and battery
-b) battery and inverter
-c) battery and metering,
-will output voltage at gain = 20 V/V.
-Input differential voltage range from 0 to 250mV, with preference 
-given to input voltages between 50 to 250 mV for errors below 0.5%.
-Typical 14 gauge cable resistance ~ 2.525 milliohms per foot. At 
-2 feet, this is a shunt resistance of ~5.05 milliohms.  
-Typical current (between battery and inverter, metering (b,c)) is 
-1A, giving an input differential voltage of only ~ 5mV which can 
-bring an error near 5%.
-
-Device power consumption (Figure 12 on datasheet) will be near 
-1.6 mA at input common-mode voltage which is ~45-60V.
-~50V * 1.6mA = 80 mW self-consumption
-*/
-
+//int apin[6];    
 float v[6];    //v0-2 for current measurements, v4:V_batt, v5:V_panels
-float gain = 20.0;    //gain of amplifier
 float Vratio = ((510.0+100.0)/100.0);  //((28.0+422.0)/28.0);  //reverse voltage-divider
 float V_battery;
 float V_panels;
-float R_cable[3] = {1,1,1};//{.00505, .00505, .00505};  //initial estimations
 float current[3];
 float energy[3] = {0,0,0};
 int time_interval = 1000;  //every sec
@@ -51,10 +31,11 @@ void loop(){
 
     //calculate current from output voltage
     //first is panel-to-battery up to ~30A ::
-    current[0] = (v[0]/gain)/R_cable[0];
+    current[0] = (v[0] - 0.5) / 0.133;        //0.133V/A
     //second (and later third) is battery-to-inverter (and metering)
-    current[1] = (v[1]/gain)/R_cable[1];       
-    current[2] = (v[2]/gain)/R_cable[2];       
+    //up to +/- 5A ::
+    current[1] = (v[1] - 2.5)/0.168;        //calibrated
+    current[2] = (v[2] - 2.525)/ 0.185;       //0.185V/A
   
     Serial.print("battery_mains_current_A: ");
     Serial.println(current[1]);
